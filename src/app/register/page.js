@@ -27,7 +27,7 @@ function RegisterPage() {
 
       if (res) {
         // El inicio de sesión fue exitoso
-        router.push('/dashboard'); // Redirige al usuario a la página /dashboard
+        router.push('/login'); // Redirige al usuario a la página /dashboard
       } else {
         // El inicio de sesión falló, maneja el error según sea necesario
         console.log('Inicio de sesión fallido');
