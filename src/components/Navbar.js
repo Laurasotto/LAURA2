@@ -13,7 +13,7 @@ async function Navbar() {
         </Link>
 
         <ul className="flex gap-x-2">
-          {!session ? (
+          {session ? (
             <>
               <li className="px-3 py-1">
                 <Link href="/dashboard/profile">Perfil</Link>
