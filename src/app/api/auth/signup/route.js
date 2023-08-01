@@ -5,8 +5,8 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 export async function POST(request) {
-    const { username, email, password } = await request.json();
-    console.log(username, password, email);
+    const { username, email, password, roleId } = await request.json();
+    console.log(username, password, email, roleId);
 
     if (!password || password.length < 6) {
         return new NextResponse(JSON.stringify({
@@ -40,6 +40,17 @@ export async function POST(request) {
             }
         });
     }
+    //validacion del rol
+    if (!roleId || roleId.trim().length === 0) {
+        return new NextResponse(JSON.stringify({
+            message: "Role cannot be empty"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
     try {
         
         await prisma.$connect();
@@ -62,7 +73,8 @@ export async function POST(request) {
             data: {
                 email,
                 username,
-                password: hashedPassword
+                password: hashedPassword,
+                roleId: parseInt(roleId)
             }
         });
 
@@ -70,7 +82,8 @@ export async function POST(request) {
             JSON.stringify({
                 email: user.email,
                 username: user.username,
-                id: user.id
+                id: user.id,
+                roleId: user.roleId
             }),
             {
                 status: 200,
@@ -91,6 +104,6 @@ export async function POST(request) {
             headers: {
                 "Content-Type": "application/json"
             }
-        });
-    }
+        });
+    }
 }

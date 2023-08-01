@@ -16,7 +16,9 @@ function RegisterPage() {
       const signupResponse = await axios.post('/api/auth/signup', {
         email: formData.get("email"),
         password: formData.get("password"),
-        username: formData.get("username")
+        username: formData.get("username"),
+        roleId: formData.get("roleId"),
+
       });
       console.log(signupResponse);
       const res = await signIn('credentials', {
@@ -65,6 +67,11 @@ function RegisterPage() {
           name="password"
           className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
         />
+        {/* select para escoger entre rol administrador y empleado */}
+        <select name="roleId" className="bg-zinc-800 px-4 py-2 block mb-2 w-full">
+          <option value="1">Admin</option>
+          <option value="2">Empleado</option>
+        </select>
 
         <button className="bg-indigo-500 px-4 py-2">Register</button>
 
@@ -73,4 +80,4 @@ function RegisterPage() {
   );
 }
 
-export default RegisterPage;
+export default RegisterPage;
