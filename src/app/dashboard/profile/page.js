@@ -1,5 +1,5 @@
 'use client'
-
+import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
 function ProfilePage() {
@@ -26,6 +26,8 @@ function ProfilePage() {
       onClick={() => {
         signOut();
       }}>Log out</button>
+
+      <Link href="negocio">Crear negocio</Link>
     </div>
   );
 }

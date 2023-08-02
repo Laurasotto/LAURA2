@@ -8,6 +8,7 @@ export async function POST(request) {
     const { username, email, password, roleId } = await request.json();
     console.log(username, password, email, roleId);
 
+    // Validación para asegurarse de que el campo password no esté vacío
     if (!password || password.length < 6) {
         return new NextResponse(JSON.stringify({
             message: "Password must be at least 6 characters"
