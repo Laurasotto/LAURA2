@@ -1,69 +1,82 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios'; // Importa axios si aún no lo has hecho
 
+function FormularioNegocio() {
+  const [nombre, setNombre] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [distribuidores, setDistribuidores] = useState([]);
+  const [selectedDistribuidor, setSelectedDistribuidor] = useState('');
 
-const page = () => {
-    const [formData, setFormData] = useState({
-        
-        id_distribuidor: '1',
-        nombre_negocio: '',
-        direccion_negocio: '',
-        fecha_creacion: {
-            type: Date,
-            default: Date.now
-        },
-      
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  // Obtén los datos reales de los distribuidores desde tu backend
+  useEffect(() => {
+    const fetchDistribuidores = async () => {
+      try {
+        const response = await axios.get('/api/distribuidores'); // Asegúrate de ajustar la URL a tu endpoint real
+        setDistribuidores(response.data);
+      } catch (error) {
+        console.error('Error al obtener los distribuidores:', error);
+      }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    fetchDistribuidores();
+  }, []);
 
-        try {
-            const res = await fetch('../api/auth/negocio', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Envía los datos del formulario al backend
+      const response = await axios.post('/api/negocios', {
+        nombre,
+        direccion,
+        id_distribuidor: selectedDistribuidor,
+      });
+      console.log('Negocio guardado:', response.data);
+      // Haz aquí algo con la respuesta, por ejemplo, mostrar un mensaje de éxito o redirigir a otra página
+    } catch (error) {
+      console.error('Error al guardar el negocio:', error);
+      // Haz aquí algo para manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+    }
+  };
 
-            if (res.ok) {
-                // Handle successful registration, e.g., show a success message or redirect.
-                window.location.href = '/dashboard/profile';
-            } else {
-                // Handle registration error, e.g., show an error message.
-            }
-        } catch (error) {
-            console.error('Error during registration:', error);
-            // Handle error during registration, e.g., show an error message.
-        }
-    };
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="nombre">Nombre:</label>
+        <input
+          type="text"
+          id="nombre"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="direccion">Dirección:</label>
+        <input
+          type="text"
+          id="direccion"
+          value={direccion}
+          onChange={(e) => setDireccion(e.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="distribuidor">Distribuidor:</label>
+        <select
+          id="distribuidor"
+          value={selectedDistribuidor}
+          onChange={(e) => setSelectedDistribuidor(e.target.value)}
+        >
+          <option value="">Seleccione un distribuidor</option>
+          {distribuidores.map((distribuidor) => (
+            <option key={distribuidor.id_distribuidor} value={distribuidor.id_distribuidor}>
+              {distribuidor.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
+      <button type="submit">Guardar</button>
+    </form>
+  );
+}
 
-    return (
-        <>
-            <h1 className='text-gray-800 font-open-sans inline-block'>Crear Negocio</h1>
-            <form className='  ' onSubmit={handleSubmit}>
-                
-                <div>
-                    <label>Nombre Negocio:</label>
-                    <input type="text" name="nombre_negocio" onChange={handleChange} value={formData.nombre_negocio} />
-                </div>
-                <div>
-                    <label>Direccion Negocio:</label>
-                    <input type="text" name="direccion_negocio" onChange={handleChange} value={formData.direccion_negocio} />
-                </div>
-                
-                
-
-                <button type="submit">Crear negocio</button>
-            </form>
-        </>
-    );
-};
-
-export default page;
+export default FormularioNegocio;

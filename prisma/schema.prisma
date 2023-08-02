@@ -30,18 +30,16 @@ model Role {
 
 model Negocio {
   id_negocio          Int                  @id @default(autoincrement())
-  id_distribuidor     Int
-  userId              Int
   nombre_negocio      String
   direccion_negocio   String
   fecha_creacion      DateTime             @default(now())
+  userId              Int
   usuario             User                 @relation(fields: [userId], references: [id])
-  distribuidor        Distribuidor         @relation(fields: [id_distribuidor], references: [id_distribuidor])
+  distribuidores      Distribuidor[]       @relation("DistribuidoresNegocios")
   movimientos_entrada Movimiento_Entrada[]
   movimientos_salida  Movimiento_Salida[]
 }
 
-// Modelo de "Distribuidor"
 model Distribuidor {
   id_distribuidor        Int                   @id @default(autoincrement())
   nombre_distribuidor    String
@@ -49,7 +47,7 @@ model Distribuidor {
   telefono_distribuidor  String
   documento_distribuidor Int
   fecha_creacion         DateTime              @default(now())
-  negocios               Negocio[]
+  negocios               Negocio[]             @relation("DistribuidoresNegocios")
   granjas_distribuidor   Granja_Distribuidor[]
   movimientos_salida     Movimiento_Salida[]
 }
