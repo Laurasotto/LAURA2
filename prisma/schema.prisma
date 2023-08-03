@@ -12,7 +12,10 @@ datasource db {
 
 model User {
   id        Int       @id @default(autoincrement())
-  username  String
+  nombre    String
+  apellido  String
+  telefono  String
+  documento Int
   email     String    @unique
   password  String
   createdAt DateTime  @default(now())
@@ -52,19 +55,40 @@ model Distribuidor {
   movimientos_salida     Movimiento_Salida[]
 }
 
+// Modelo de "Granja_Distribuidor" (tabla de relación entre Distribuidor y Granja)
+model Granja_Distribuidor {
+  id_granja_distri   Int                  @id @default(autoincrement())
+  distribuidor       Distribuidor         @relation(fields: [id_distribuidor1], references: [id_distribuidor])
+  granja             Granja               @relation(fields: [id_granja1], references: [id_granja])
+  fecha_entrada      DateTime             @default(now())
+  Movimiento_Entrada Movimiento_Entrada[]
+  id_distribuidor1   Int
+  id_granja1         Int
+}
+
 // Modelo de "Movimiento_Entrada"
 model Movimiento_Entrada {
   id_mov_entra        Int                 @id @default(autoincrement())
-  id_negocio          Int
-  id_granja_distri    Int
-  id_corte            Int
-  id_tipo_corte       Int
+  id_negocio1         Int
+  id_granja_distri1   Int
+  peso                Int
   precio_entrada      Int
   fecha_creacion      DateTime            @default(now())
-  negocio             Negocio             @relation(fields: [id_negocio], references: [id_negocio])
-  granja_distribuidor Granja_Distribuidor @relation(fields: [id_granja_distri], references: [id_granja_distri])
-  corte               Corte               @relation(fields: [id_corte], references: [id_corte])
-  tipo_corte          Tipo_Corte          @relation(fields: [id_tipo_corte], references: [id_tipo_corte])
+  negocio             Negocio             @relation(fields: [id_negocio1], references: [id_negocio])
+  granja_distribuidor Granja_Distribuidor @relation(fields: [id_granja_distri1], references: [id_granja_distri])
+  Corte               Corte?              @relation(fields: [id_corte], references: [id_corte])
+  id_corte            Int?
+}
+
+model Corte {
+  id_corte         Int                  @id @default(autoincrement())
+  id_raza          Int
+  id_categoria     Int
+  presentacion     String
+  descripcion      String
+  fecha_creacion   DateTime             @default(now())
+  categoria_animal Animal               @relation(fields: [id_categoria], references: [id_categoria])
+  movimientos      Movimiento_Entrada[]
 }
 
 // Modelo de "Movimiento_Salida"
@@ -73,83 +97,39 @@ model Movimiento_Salida {
   id_negocio      Int
   id_distribuidor Int
   id_corte        Int
-  cantidad_salida Int
+  peso            Int
+  precio_salida   Int
   fecha_salida    DateTime     @default(now())
   id_raza         Int
   negocio         Negocio      @relation(fields: [id_negocio], references: [id_negocio])
   distribuidor    Distribuidor @relation(fields: [id_distribuidor], references: [id_distribuidor])
-  corte           Corte        @relation(fields: [id_corte], references: [id_corte])
   raza            Razas        @relation(fields: [id_raza], references: [id_raza])
 }
 
-// Modelo de "Granja_Distribuidor" (tabla de relación entre Distribuidor y Granja)
-model Granja_Distribuidor {
-  id_granja_distri   Int                  @id @default(autoincrement())
-  distribuidor       Distribuidor         @relation(fields: [id_distribuidor], references: [id_distribuidor])
-  granja             Granja               @relation(fields: [id_granja], references: [id_granja])
-  fecha_entrada      DateTime             @default(now())
-  Movimiento_Entrada Movimiento_Entrada[]
-  id_distribuidor    Int
-  id_granja          Int
-}
-
 // Modelo de "Corte"
-model Corte {
-  id_corte           Int                  @id @default(autoincrement())
-  id_tipo_corte      Int
-  id_raza            Int
-  id_categoria       Int
-  presentacion       String
-  descripcion        String
-  fecha_creacion     DateTime             @default(now())
-  tipo_corte         Tipo_Corte           @relation(fields: [id_tipo_corte], references: [id_tipo_corte])
-  raza               Razas                @relation(fields: [id_raza], references: [id_raza])
-  categoria_animal   Categoria_Animal     @relation(fields: [id_categoria], references: [id_categoria])
-  Movimiento_Entrada Movimiento_Entrada[]
-  Movimiento_Salida  Movimiento_Salida[]
-}
 
 // Modelo de "Razas"
+model Granja {
+  id_granja            Int                   @id @default(autoincrement())
+  nombre_granja        String
+  direccion            String
+  fecha_creacion       DateTime              @default(now())
+  animales             Animal[] // Relación muchos a muchos con Categoria_Animal
+  granjas_distribuidor Granja_Distribuidor[]
+}
+
 model Razas {
   id_raza            Int                 @id @default(autoincrement())
   id_categoria       Int
   nombre_raza        String
-  categoria          Categoria_Animal    @relation(fields: [id_categoria], references: [id_categoria])
-  cortes             Corte[]
+  categoria          Animal              @relation(fields: [id_categoria], references: [id_categoria])
   movimientos_salida Movimiento_Salida[]
-  tipos_corte        Tipo_Corte[]
 }
 
-// Modelo de "Categoria_Animal"
-model Categoria_Animal {
-  id_categoria     Int          @id @default(autoincrement())
+model Animal {
+  id_categoria     Int      @id @default(autoincrement())
   nombre_categoria String
   razas            Razas[]
-  tipos_corte      Tipo_Corte[]
-  cortes           Corte[]
+  tipos_corte      Corte[]
   granjas          Granja[]
-}
-
-// Modelo de "Tipo_Corte"
-model Tipo_Corte {
-  id_tipo_corte       Int                  @id @default(autoincrement())
-  id_raza             Int
-  id_categoria        Int
-  presentacion        String
-  descripcion         String
-  fecha_creacion      DateTime             @default(now())
-  raza                Razas                @relation(fields: [id_raza], references: [id_raza])
-  categoria_animal    Categoria_Animal     @relation(fields: [id_categoria], references: [id_categoria])
-  movimientos_entrada Movimiento_Entrada[]
-  cortes              Corte[]
-}
-
-model Granja {
-  id_granja            Int                   @id @default(autoincrement())
-  id_categoria         Int
-  nombre_granja        String
-  direccion            String
-  fecha_creacion       DateTime              @default(now())
-  categoria_animal     Categoria_Animal      @relation(fields: [id_categoria], references: [id_categoria])
-  granjas_distribuidor Granja_Distribuidor[]
 }
