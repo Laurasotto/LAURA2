@@ -32,15 +32,13 @@ model Role {
 }
 
 model Negocio {
-  id_negocio          Int                  @id @default(autoincrement())
-  nombre_negocio      String
-  direccion_negocio   String
-  fecha_creacion      DateTime             @default(now())
-  userId              Int
-  usuario             User                 @relation(fields: [userId], references: [id])
-  distribuidores      Distribuidor[]       @relation("DistribuidoresNegocios")
-  movimientos_entrada Movimiento_Entrada[]
-  movimientos_salida  Movimiento_Salida[]
+  id_negocio        Int            @id @default(autoincrement())
+  nombre_negocio    String
+  direccion_negocio String
+  fecha_creacion    DateTime       @default(now())
+  userId            Int
+  usuario           User           @relation(fields: [userId], references: [id])
+  distribuidores    Distribuidor[] @relation("DistribuidoresNegocios")
 }
 
 model Distribuidor {
@@ -52,84 +50,72 @@ model Distribuidor {
   fecha_creacion         DateTime              @default(now())
   negocios               Negocio[]             @relation("DistribuidoresNegocios")
   granjas_distribuidor   Granja_Distribuidor[]
-  movimientos_salida     Movimiento_Salida[]
 }
 
-// Modelo de "Granja_Distribuidor" (tabla de relación entre Distribuidor y Granja)
+// Modelo de "Granja_Distribuidor"
 model Granja_Distribuidor {
-  id_granja_distri   Int                  @id @default(autoincrement())
-  distribuidor       Distribuidor         @relation(fields: [id_distribuidor1], references: [id_distribuidor])
-  granja             Granja               @relation(fields: [id_granja1], references: [id_granja])
-  fecha_entrada      DateTime             @default(now())
+  id_gd              Int                  @id @default(autoincrement())
+  distribuidor       Distribuidor         @relation(fields: [id_distribuidor], references: [id_distribuidor])
+  granja             Granja               @relation(fields: [id_granja], references: [id_granja])
   Movimiento_Entrada Movimiento_Entrada[]
-  id_distribuidor1   Int
-  id_granja1         Int
+  id_distribuidor    Int
+  id_granja          Int // Creamos un índice único para reemplazar la PK
 }
 
 // Modelo de "Movimiento_Entrada"
+
 model Movimiento_Entrada {
-  id_mov_entra        Int                 @id @default(autoincrement())
-  id_negocio1         Int
-  id_granja_distri1   Int
-  peso                Int
-  precio_entrada      Int
-  fecha_creacion      DateTime            @default(now())
-  negocio             Negocio             @relation(fields: [id_negocio1], references: [id_negocio])
-  granja_distribuidor Granja_Distribuidor @relation(fields: [id_granja_distri1], references: [id_granja_distri])
-  Corte               Corte?              @relation(fields: [id_corte], references: [id_corte])
-  id_corte            Int?
+  id                 Int                 @id @default(autoincrement())
+  fecha              DateTime            @default(now())
+  peso               Int
+  precio             Int
+  distribuidorGranja Granja_Distribuidor @relation(fields: [id_gd], references: [id_gd])
+  id_gd              Int
+  movimientoSalida   Movimiento_salida[]
+  corte              Corte?              @relation(fields: [corteId], references: [id_corte])
+  corteId            Int?
 }
 
+// Modelo de "Movimiento_salida"
+model Movimiento_salida {
+  id                  Int                 @id @default(autoincrement())
+  fecha               DateTime
+  peso                Int
+  precio              Int
+  movimientoEntrada   Movimiento_Entrada? @relation( fields: [movimientoEntradaId], references: [id])
+  movimientoEntradaId Int?
+}
+
+
 model Corte {
-  id_corte         Int                  @id @default(autoincrement())
-  id_raza          Int
-  id_categoria     Int
+  id_corte               Int                  @id @default(autoincrement())
   presentacion     String
   descripcion      String
   fecha_creacion   DateTime             @default(now())
-  categoria_animal Animal               @relation(fields: [id_categoria], references: [id_categoria])
   movimientos      Movimiento_Entrada[]
 }
 
-// Modelo de "Movimiento_Salida"
-model Movimiento_Salida {
-  id_salida       Int          @id @default(autoincrement())
-  id_negocio      Int
-  id_distribuidor Int
-  id_corte        Int
-  peso            Int
-  precio_salida   Int
-  fecha_salida    DateTime     @default(now())
-  id_raza         Int
-  negocio         Negocio      @relation(fields: [id_negocio], references: [id_negocio])
-  distribuidor    Distribuidor @relation(fields: [id_distribuidor], references: [id_distribuidor])
-  raza            Razas        @relation(fields: [id_raza], references: [id_raza])
-}
 
-// Modelo de "Corte"
 
-// Modelo de "Razas"
 model Granja {
   id_granja            Int                   @id @default(autoincrement())
   nombre_granja        String
   direccion            String
   fecha_creacion       DateTime              @default(now())
-  animales             Animal[] // Relación muchos a muchos con Categoria_Animal
+  razas             Razas? @relation(fields: [id_raza], references: [id_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
+  id_raza            Int // Creamos un índice único para reemplazar la PK
   granjas_distribuidor Granja_Distribuidor[]
 }
 
 model Razas {
-  id_raza            Int                 @id @default(autoincrement())
-  id_categoria       Int
+  id_raza            Int     @id @default(autoincrement())
   nombre_raza        String
-  categoria          Animal              @relation(fields: [id_categoria], references: [id_categoria])
-  movimientos_salida Movimiento_Salida[]
+  Animal             Animal? @relation(fields: [id_animal], references: [id_animal])
+  id_animal          Int? // Creamos un índice único para reemplazar la PK
+  granjas            Granja[]
 }
-
 model Animal {
-  id_categoria     Int      @id @default(autoincrement())
-  nombre_categoria String
-  razas            Razas[]
-  tipos_corte      Corte[]
-  granjas          Granja[]
+  id_animal     Int      @id @default(autoincrement())
+  nombre_animal String
+  Raza             Razas[]
 }
