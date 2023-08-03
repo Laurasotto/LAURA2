@@ -33,6 +33,8 @@ export async function POST(request) {
         });
     }
 
+   
+
     const negocio = await prisma.negocio.create({
         data: {
             nombre_negocio,
