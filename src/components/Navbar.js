@@ -1,9 +1,9 @@
+'use client'
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { getSession } from "next-auth/react";
 
-async function Navbar() {
-  const session = await getSession();
-  
+function Navbar() {
+  const { data: session } = useSession();
 
   return (
     <nav className="bg-zinc-900 p-4">

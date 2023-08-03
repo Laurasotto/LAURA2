@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Navbar/>
+          <Navbar />
           {children}</Providers> {/* Utiliza el componente Providers aquí */}
       </body>
     </html>
