@@ -5,8 +5,11 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 export async function POST(request) {
-    const { username, email, password, roleId } = await request.json();
-    console.log(username, password, email, roleId);
+    const { nombre,apellido,telefono,documento, email, password, roleId } = await request.json();
+    //crear roles para hacer un select en el formulario del rol
+    const roles = await prisma.role.findMany();
+    console.log(roles);
+    console.log(nombre,apellido,telefono,documento, password, email, roleId);
 
     // Validación para asegurarse de que el campo password no esté vacío
     if (!password || password.length < 6) {
@@ -19,16 +22,7 @@ export async function POST(request) {
             }
         });
     }
-    if (!username || username.trim().length === 0) {
-        return new NextResponse(JSON.stringify({
-            message: "Username cannot be empty"
-        }), {
-            status: 400,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
+    
 
     // Validación para asegurarse de que el campo email no esté vacío
     if (!email || email.trim().length === 0) {
@@ -52,6 +46,52 @@ export async function POST(request) {
             }
         });
     }
+    
+    //validar, nombre, apellido, telefono, documento
+    if (!nombre || nombre.trim().length === 0) {
+        return new NextResponse(JSON.stringify({
+            message: "Nombre cannot be empty"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+    if (!apellido || apellido.trim().length === 0) {
+        return new NextResponse(JSON.stringify({
+            message: "Apellido cannot be empty"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+    if (!telefono || telefono.trim().length === 0) {
+        return new NextResponse(JSON.stringify({
+            message: "Telefono cannot be empty"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+    if (!documento || documento.trim().length === 0) {
+        return new NextResponse(JSON.stringify({
+            message: "Documento cannot be empty"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+
+
+
+
     try {
         
         await prisma.$connect();
@@ -72,8 +112,11 @@ export async function POST(request) {
 
         const user = await prisma.user.create({
             data: {
+                nombre,
+                apellido,
+                telefono,
+                documento: parseInt(documento),
                 email,
-                username,
                 password: hashedPassword,
                 roleId: parseInt(roleId)
             }
@@ -81,8 +124,11 @@ export async function POST(request) {
 
         return new NextResponse(
             JSON.stringify({
+                nombre: user.nombre,
+                apellido: user.apellido,
+                telefono: user.telefono,
+                documento: user.documento,
                 email: user.email,
-                username: user.username,
                 id: user.id,
                 roleId: user.roleId
             }),

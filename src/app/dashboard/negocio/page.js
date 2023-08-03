@@ -1,82 +1,63 @@
 'use client'
-import { useState, useEffect } from 'react';
-import axios from 'axios'; // Importa axios si aún no lo has hecho
 
-function FormularioNegocio() {
-  const [nombre, setNombre] = useState('');
-  const [direccion, setDireccion] = useState('');
-  const [distribuidores, setDistribuidores] = useState([]);
-  const [selectedDistribuidor, setSelectedDistribuidor] = useState('');
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-  // Obtén los datos reales de los distribuidores desde tu backend
-  useEffect(() => {
-    const fetchDistribuidores = async () => {
-      try {
-        const response = await axios.get('/api/distribuidores'); // Asegúrate de ajustar la URL a tu endpoint real
-        setDistribuidores(response.data);
-      } catch (error) {
-        console.error('Error al obtener los distribuidores:', error);
-      }
-    };
+function NegocioPage() {
+    const [nombre_negocio, setNombre_negocio] = useState("");
+    const [direccion_negocio, setDireccion_negocio] = useState("");
+    const { data: session } = useSession();
+    const router = useRouter();
 
-    fetchDistribuidores();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Envía los datos del formulario al backend
-      const response = await axios.post('/api/negocios', {
-        nombre,
-        direccion,
-        id_distribuidor: selectedDistribuidor,
-      });
-      console.log('Negocio guardado:', response.data);
-      // Haz aquí algo con la respuesta, por ejemplo, mostrar un mensaje de éxito o redirigir a otra página
-    } catch (error) {
-      console.error('Error al guardar el negocio:', error);
-      // Haz aquí algo para manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const res = await fetch("/api/auth/negocio", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nombre_negocio,
+                direccion_negocio,
+                userId: session?.user?.id
+            })
+        })
+        if (res.ok) {
+            router.push("/dashboard/profile");
+        }
     }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="nombre">Nombre:</label>
-        <input
-          type="text"
-          id="nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="direccion">Dirección:</label>
-        <input
-          type="text"
-          id="direccion"
-          value={direccion}
-          onChange={(e) => setDireccion(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="distribuidor">Distribuidor:</label>
-        <select
-          id="distribuidor"
-          value={selectedDistribuidor}
-          onChange={(e) => setSelectedDistribuidor(e.target.value)}
-        >
-          <option value="">Seleccione un distribuidor</option>
-          {distribuidores.map((distribuidor) => (
-            <option key={distribuidor.id_distribuidor} value={distribuidor.id_distribuidor}>
-              {distribuidor.nombre}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button type="submit">Guardar</button>
-    </form>
-  );
+    return (
+        <div className="justify-center h-[calc(100vh-4rem)] flex flex-col items-center gap-y-5">
+            <h1 className="font-bold text-3xl">Crear negocio</h1>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
+                <input
+                    type="text"
+                    name="nombre_negocio"
+                    id="nombre_negocio"
+                    value={nombre_negocio}
+                    onChange={(e) => setNombre_negocio(e.target.value)}
+                    placeholder="Nombre del negocio"
+                    className="bg-zinc-800 p-4"
+                />
+                <input
+                    type="text"
+                    name="direccion_negocio"
+                    id="direccion_negocio"
+                    value={direccion_negocio}
+                    onChange={(e) => setDireccion_negocio(e.target.value)}
+                    placeholder="Direccion del negocio"
+                    className="bg-zinc-800 p-4"
+                />
+                <button type="submit" className="bg-zinc-800 px-4 py-2 block">Crear negocio</button>
+            </form>
+        </div>
+    );
 }
 
-export default FormularioNegocio;
+
+export default NegocioPage;
+
+
+
+

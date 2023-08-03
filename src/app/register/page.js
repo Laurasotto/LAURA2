@@ -14,9 +14,12 @@ function RegisterPage() {
 
     try {
       const signupResponse = await axios.post('/api/auth/signup', {
+        nombre: formData.get("nombre"),
+        apellido: formData.get("apellido"),
+        telefono: formData.get("telefono"),
+        documento: formData.get("documento"),
         email: formData.get("email"),
         password: formData.get("password"),
-        username: formData.get("username"),
         roleId: formData.get("roleId"),
 
       });
@@ -51,8 +54,26 @@ function RegisterPage() {
         }
         <h1 className='bg-white text-4xl font-bold mb-7'>SignUp</h1>
         <input type="text"
-          placeholder="Username"
-          name="username"
+          placeholder="Nombre"
+          name="nombre"
+          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+        />
+
+        <input type="text"
+          placeholder="Apellido"
+          name="apellido"
+          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+        />
+
+        <input type="text"
+          placeholder="Telefono"
+          name="telefono"
+          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+        />
+
+        <input type="text"
+          placeholder="Documento"
+          name="documento"
           className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
         />
 
@@ -67,11 +88,12 @@ function RegisterPage() {
           name="password"
           className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
         />
-        {/* select para escoger entre rol administrador y empleado */}
+
         <select name="roleId" className="bg-zinc-800 px-4 py-2 block mb-2 w-full">
           <option value="1">Admin</option>
           <option value="2">Empleado</option>
         </select>
+        
 
         <button className="bg-indigo-500 px-4 py-2">Register</button>
 

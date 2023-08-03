@@ -1,30 +1,63 @@
 // pages/api/negocio.js
-
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { useSession } from "next-auth/react";
 
-export const POST = async (req) => {
-    const data = await req.json();
-    const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-    try {
-        const negocio = await prisma.negocio.create({
-            data: {
-                id_negocio: data.id_negocio,
-                id_distribuidor: data.id_distribuidor,
-                nombre_negocio: data.nombre_negocio,
-                direccion_negocio: data.direccion_negocio,
-                fecha_creacion: new Date(), // Geneara la fecha y hora actual
+export async function POST(request) {
+    
+    const { nombre_negocio, direccion_negocio,userId} = await request.json();
+    console.log(nombre_negocio, direccion_negocio, userId);
+
+    //validaciones de nombre, direccion y userId
+    
+    if (!nombre_negocio || nombre_negocio.trim().length === 0) {
+        return new NextResponse(JSON.stringify({
+            message: "Nombre cannot be empty"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
             }
         });
-
-        return NextResponse.json(negocio);
-    } catch (error) {
-        console.log(error);
-        return NextResponse.json(error);
-    } finally {
-        await prisma.$disconnect();
     }
-};
+    if (!direccion_negocio || direccion_negocio.trim().length === 0) {
+        return new NextResponse(JSON.stringify({
+            message: "Direccion cannot be empty"
+        }), {
+            status: 400,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
 
-export default POST;
+    const negocio = await prisma.negocio.create({
+        data: {
+            nombre_negocio,
+            direccion_negocio,
+            userId, 
+        }
+    });
+    return new NextResponse(
+        JSON.stringify({
+            nombre_negocio: negocio.nombre_negocio,
+            direccion_negocio: negocio.direccion_negocio,
+            userId: negocio.userId,
+        }),
+        {
+            status: 200,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+    )
+}
+
+
+
+
+
+
+

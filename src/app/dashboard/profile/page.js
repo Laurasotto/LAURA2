@@ -21,7 +21,8 @@ function ProfilePage() {
           2
           )}
       </pre>
-
+      <p>ID de usuario: {session?.user?.id}</p>
+      <p>ID de rol: {session?.user?.roleId}</p>
       <button className="bg-zinc-800 px-4 py-2 block mb-2"
       onClick={() => {
         signOut();
