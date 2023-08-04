@@ -27,11 +27,15 @@ function ProfilePage() {
           signOut();
         }}>Log out</button>
 
+      
       {session?.user?.roleId === 1 && (
-        <Link href="negocio">Crear negocio</Link>
+        <>
+         <Link href="negocio">Crear negocio</Link>
+         <Link href="animal">Crear Animal</Link>
+         <Link href="granja">Crear Granja</Link>
+        </>
       )}
     </div>
   );
 }
-
 export default ProfilePage;
