@@ -6,17 +6,18 @@ export async function POST(req) {
   const data = await req.json();
 
   try {
-    const newDistributor = await prisma.distribuidor.create({
+    const newEntryMovement = await prisma.movimiento_Entrada.create({
       data: {
-        nombre_distribuidor: data.nombre,
-        apellido_distribuidor: data.apellido,
-        telefono_distribuidor: data.telefono,
-        documento_distribuidor: parseInt(data.documento),
+        peso: parseInt(data.peso),
+        precio: parseInt(data.precio),
+        id_gd: parseInt(data.id_gd),
+        id_corte: parseInt(data.id_corte),
       },
     });
 
-    return NextResponse.json(newDistributor);
+    return NextResponse.json(newEntryMovement);
   } catch (error) {
+    console.log(error);
     return NextResponse.json({
       error: error.message,
     });
