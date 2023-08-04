@@ -6,103 +6,64 @@ import { useSession } from "next-auth/react";
 const prisma = new PrismaClient();
 
 export async function POST(request) {
-    
-    const {nombre_raza,id_animal} = await request.json();
-    console.log(nombre_raza,id_animal);
+  const { nombre_raza, id_animal } = await request.json();
+  console.log(nombre_raza, id_animal);
 
-    //validaciones de nombre, direccion y userId
-    
+  //validaciones de nombre, direccion y userId
+
+  try {
     if (!nombre_raza || nombre_raza.trim().length === 0) {
-        return new NextResponse(JSON.stringify({
-            message: "Nombre cannot be empty"
-        }), {
-            status: 400,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
-   
-    try {
-        
-        await prisma.$connect();
-        const razaFound = await prisma.razas.findUnique({ where: { nombre_raza } });
-        
-        if (razaFound) {
-            return new NextResponse(JSON.stringify({
-                message: "Raza already exists"
-            }), {
-                status: 409,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+      return NextResponse.json(
+        {
+          message: "Nombre cannot be empty",
+        },
+        {
+          status: 400,
         }
+      );
+    }
+
+    const razaFound = await prisma.razas.findUnique({ where: { nombre_raza } });
+
+    if (razaFound) {
+      return NextResponse.json(
+        {
+          message: "Raza already exists",
+        },
+        {
+          status: 409,
+        }
+      );
+    }
+
     const raza = await prisma.razas.create({
-        data: {
-            nombre_raza,
-            id_animal
-             
-        }
+      data: {
+        nombre_raza,
+        id_animal,
+      },
     });
-    return new NextResponse(
-        JSON.stringify({
-            nombre_raza:raza.nombre_raza,
-            id_animal: raza.id_animal
-          
-        }),
-        {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-    )
-} catch (error) {
+
+    return NextResponse.json({
+      nombre_raza: raza.nombre_raza,
+      id_animal: raza.id_animal,
+    });
+  } catch (error) {
     console.log(error);
-    if (error instanceof Error) {
-        return new NextResponse(JSON.stringify({
-            message: error.message
-        }), {
-            status: 400,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    } else {
-        // Si el error no es una instancia de Error, maneja el error de otra manera (opcional).
-        return new NextResponse(JSON.stringify({
-            message: "An unexpected error occurred"
-        }), {
-            status: 500,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
+    return NextResponse.json({ message: error.message }, { status: 400 });
+  }
 }
-}
+
 export async function GET() {
+  try {
     const razas = await prisma.razas.findMany({
-        select: {
-            id_raza: true,
-            nombre_raza: true,
-            id_animal: true,
-        }
+      select: {
+        id_raza: true,
+        nombre_raza: true,
+        id_animal: true,
+      },
     });
-    return new NextResponse(
-        JSON.stringify(razas),
-        {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-    )
+    return NextResponse.json(razas);
+  } catch (error) {
+    return NextResponse.json({ message: error.message }, { status: 400 });
+  }
 }
-
-
-
-
-
-

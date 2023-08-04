@@ -6,60 +6,48 @@ import { useSession } from "next-auth/react";
 const prisma = new PrismaClient();
 
 export async function POST(request) {
-    
-    const { nombre_negocio, direccion_negocio,userId} = await request.json();
-    console.log(nombre_negocio, direccion_negocio, userId);
+  const { nombre_negocio, direccion_negocio, userId } = await request.json();
+  console.log(nombre_negocio, direccion_negocio, userId);
 
-    //validaciones de nombre, direccion y userId
-    
+  //validaciones de nombre, direccion y userId
+
+  try {
     if (!nombre_negocio || nombre_negocio.trim().length === 0) {
-        return new NextResponse(JSON.stringify({
-            message: "Nombre cannot be empty"
-        }), {
-            status: 400,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
-    if (!direccion_negocio || direccion_negocio.trim().length === 0) {
-        return new NextResponse(JSON.stringify({
-            message: "Direccion cannot be empty"
-        }), {
-            status: 400,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+      return NextResponse.json(
+        {
+          message: "Nombre cannot be empty",
+        },
+        {
+          status: 400,
+        }
+      );
     }
 
-   
+    if (!direccion_negocio || direccion_negocio.trim().length === 0) {
+      return NextResponse.json(
+        {
+          message: "Direccion cannot be empty",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     const negocio = await prisma.negocio.create({
-        data: {
-            nombre_negocio,
-            direccion_negocio,
-            userId, 
-        }
+      data: {
+        nombre_negocio,
+        direccion_negocio,
+        userId,
+      },
     });
-    return new NextResponse(
-        JSON.stringify({
-            nombre_negocio: negocio.nombre_negocio,
-            direccion_negocio: negocio.direccion_negocio,
-            userId: negocio.userId,
-        }),
-        {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-    )
+
+    return NextResponse.json({
+      nombre_negocio: negocio.nombre_negocio,
+      direccion_negocio: negocio.direccion_negocio,
+      userId: negocio.userId,
+    });
+  } catch (error) {
+    return NextResponse.json({ message: error.message }, { status: 400 });
+  }
 }
-
-
-
-
-
-
-
