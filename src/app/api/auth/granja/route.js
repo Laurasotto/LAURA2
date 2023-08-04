@@ -23,10 +23,9 @@ export async function GET() {
 //     nombre_granja        String
 //     direccion            String                 @unique
 //     fecha_creacion       DateTime              @default(now())
-//     razas             Razas? @relation(fields: [id_raza], references: [id_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
-//     id_raza            Int // Creamos un índice único para reemplazar la PK
+//     razas                Granja_Raza           @relation(fields: [id_granja_raza], references: [id_granja_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
+//     id_granja_raza       Int
 //     granjas_distribuidor Granja_Distribuidor[]
-//     granja_raza          Granja_Raza[]
 //   }
 
 //que el post sea para crear una granja con
