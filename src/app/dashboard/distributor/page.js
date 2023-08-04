@@ -1,58 +1,30 @@
-'use client'
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const CrearDistribuidorFormulario = () => {
-  const [nombreDistribuidor, setNombreDistribuidor] = useState('');
-  const [apellidoDistribuidor, setApellidoDistribuidor] = useState('');
-  const [telefDistribuidor, setTelefDistribuidor] = useState('');
-  const [documentoDistribuidor, setDocumentoDistribuidor] = useState('');
+  const [distribuidores, setDistribuidores] = useState({
+    nombre_distribuidor: "",
+    apellido_distribuidor: "",
+    telefono_distribuidor: "",
+    documento_distribuidor: "",
+  });
   const [negocios, setNegocios] = useState([]);
   const [selectedNegocios, setSelectedNegocios] = useState([]);
 
-  useEffect(() => {
-    // Llamada a la API para obtener la lista de negocios
-    fetch('/api/negocios')
-      .then((response) => response.json())
-      .then((data) => {
-        setNegocios(data);
-      })
-      .catch((error) => console.error('Error al obtener los negocios', error));
-  }, []);
-
-  const handleDistribuidorSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validaciones de campos aquí...
-
-    // Formatear la lista de negocios seleccionados en un arreglo de IDs
-    const negociosSeleccionados = selectedNegocios.map((negocio) => negocio.id_negocio);
-
+  const getNegocios = async () => {
     try {
-      const response = await fetch('/api/auth/distribuidor', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nombre_distribuidor: nombreDistribuidor,
-          apellido_distribuidor: apellidoDistribuidor,
-          telefono_distribuidor: telefDistribuidor,
-          documento_distribuidor: documentoDistribuidor,
-          negocios: negociosSeleccionados,
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        // Mostrar mensajes de error
-      } else {
-        const data = await response.json();
-        // Mostrar mensaje de éxito
-      }
+      const res = await axios.get("/api/auth/negocio");
+      setNegocios(res.data);
     } catch (error) {
-      // Mostrar mensaje de error al comunicarse con el servidor
+      console.log(error);
     }
   };
+
+  useEffect(() => {
+    // Llamada a la API para obtener la lista de negocios
+    getNegocios();
+  }, []);
 
   const handleNegocioSelection = (event) => {
     const negocioId = parseInt(event.target.value);
@@ -65,6 +37,31 @@ const CrearDistribuidorFormulario = () => {
     });
   };
 
+  const handleDistribuidorSubmit = async (e) => {
+    e.preventDefault();
+    console.log(selectedNegocios);
+
+    try {
+      const res = await axios.post("/api/auth/distributor", {
+        ...distribuidores,
+        negocios: selectedNegocios,
+      });
+
+      setDistribuidores({
+        nombre_distribuidor: "",
+        apellido_distribuidor: "",
+        telefono_distribuidor: "",
+        documento_distribuidor: "",
+      });
+
+      setSelectedNegocios([]);
+
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <form onSubmit={handleDistribuidorSubmit}>
@@ -72,35 +69,59 @@ const CrearDistribuidorFormulario = () => {
           <label>Nombre del distribuidor:</label>
           <input
             type="text"
-            value={nombreDistribuidor}
-            onChange={(e) => setNombreDistribuidor(e.target.value)}
+            value={distribuidores.nombre_distribuidor || ""}
+            onChange={(e) =>
+              setDistribuidores({
+                ...distribuidores,
+                nombre_distribuidor: e.target.value,
+              })
+            }
+            style={{ color: "black" }}
           />
         </div>
         <div>
           <label>Apellido del distribuidor:</label>
           <input
             type="text"
-            value={apellidoDistribuidor}
-            onChange={(e) => setApellidoDistribuidor(e.target.value)}
+            value={distribuidores.apellido_distribuidor || ""}
+            onChange={(e) =>
+              setDistribuidores({
+                ...distribuidores,
+                apellido_distribuidor: e.target.value,
+              })
+            }
+            style={{ color: "black" }}
           />
         </div>
         <div>
           <label>Teléfono del distribuidor:</label>
           <input
             type="text"
-            value={telefDistribuidor}
-            onChange={(e) => setTelefDistribuidor(e.target.value)}
+            value={distribuidores.telefono_distribuidor || ""}
+            onChange={(e) =>
+              setDistribuidores({
+                ...distribuidores,
+                telefono_distribuidor: e.target.value,
+              })
+            }
+            style={{ color: "black" }}
           />
         </div>
         <div>
           <label>Documento del distribuidor:</label>
           <input
             type="text"
-            value={documentoDistribuidor}
-            onChange={(e) => setDocumentoDistribuidor(e.target.value)}
+            value={distribuidores.documento_distribuidor || ""}
+            onChange={(e) =>
+              setDistribuidores({
+                ...distribuidores,
+                documento_distribuidor: e.target.value,
+              })
+            }
+            style={{ color: "black" }}
           />
         </div>
-        <div>
+        <div style={{ border: "1px solid white" }}>
           <label>Seleccionar negocios:</label>
           {negocios.map((negocio) => (
             <div key={negocio.id_negocio}>

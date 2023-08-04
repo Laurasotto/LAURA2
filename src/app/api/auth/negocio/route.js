@@ -51,3 +51,13 @@ export async function POST(request) {
     return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }
+
+export async function GET() {
+  try {
+    const negocios = await prisma.negocio.findMany();
+
+    return NextResponse.json(negocios);
+  } catch (error) {
+    return NextResponse.json({ message: error.message }, { status: 400 });
+  }
+}

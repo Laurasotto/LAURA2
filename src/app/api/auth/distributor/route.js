@@ -1,6 +1,7 @@
 // API para registrar un distribuidor con múltiples negocios
 // pages/api/auth/distribuidor.js
 import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -27,11 +28,6 @@ export async function POST(request) {
     documento_distribuidor,
     negocios,
   } = await request.json();
-  console.log(nombre_distribuidor);
-  console.log(apellido_distribuidor);
-  console.log(telefono_distribuidor);
-  console.log(documento_distribuidor);
-  console.log(negocios);
 
   try {
     const distribuidor = await prisma.distribuidor.create({
@@ -39,20 +35,23 @@ export async function POST(request) {
         nombre_distribuidor,
         apellido_distribuidor,
         telefono_distribuidor,
-        documento_distribuidor,
-        distri_negocio: {
-          create: negocios.map((negocioId) => ({
-            negocio: { connect: { id_negocio: negocioId } },
-          })),
+        documento_distribuidor: parseInt(documento_distribuidor),
+      },
+    });
+
+    //asociar los negocios al distribuidor
+    negocios.forEach(async (negocioId) => {
+      await prisma.negocio_Distribuidor.create({
+        data: {
+          id_distribuidor: distribuidor.id_distribuidor,
+          id_negocio: negocioId,
         },
-      },
-      include: {
-        distri_negocio: true,
-      },
+      });
     });
 
     return NextResponse.json(distribuidor);
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }
