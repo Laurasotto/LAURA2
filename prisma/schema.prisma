@@ -82,40 +82,48 @@ model Movimiento_salida {
   fecha               DateTime
   peso                Int
   precio              Int
-  movimientoEntrada   Movimiento_Entrada? @relation( fields: [movimientoEntradaId], references: [id])
+  movimientoEntrada   Movimiento_Entrada? @relation(fields: [movimientoEntradaId], references: [id])
   movimientoEntradaId Int?
 }
 
-
 model Corte {
-  id_corte               Int                  @id @default(autoincrement())
-  presentacion     String
-  descripcion      String
-  fecha_creacion   DateTime             @default(now())
-  movimientos      Movimiento_Entrada[]
+  id_corte       Int                  @id @default(autoincrement())
+  nombre_corte   String               @unique
+  presentacion   String
+  descripcion    String
+  fecha_creacion DateTime             @default(now())
+  movimientos    Movimiento_Entrada[]
 }
-
-
 
 model Granja {
   id_granja            Int                   @id @default(autoincrement())
   nombre_granja        String
-  direccion            String
+  direccion            String                @unique
   fecha_creacion       DateTime              @default(now())
-  razas             Razas? @relation(fields: [id_raza], references: [id_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
-  id_raza            Int // Creamos un índice único para reemplazar la PK
+  razas                Granja_Raza           @relation(fields: [id_granja_raza], references: [id_granja_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
+  id_granja_raza       Int
   granjas_distribuidor Granja_Distribuidor[]
 }
 
-model Razas {
-  id_raza            Int     @id @default(autoincrement())
-  nombre_raza        String
-  Animal             Animal? @relation(fields: [id_animal], references: [id_animal])
-  id_animal          Int? // Creamos un índice único para reemplazar la PK
-  granjas            Granja[]
+//tabla intermedia entre granja y raza
+model Granja_Raza {
+  id_granja_raza Int      @id @default(autoincrement())
+  id_granja      Int
+  id_raza        Int // Cambiar el tipo a Int
+  granja         Granja[]
+  raza           Razas    @relation(fields: [id_raza], references: [id_raza])
 }
+
+model Razas {
+  id_raza     Int           @id @default(autoincrement()) // Cambiar el tipo a Int
+  nombre_raza String[]      @unique
+  Animal      Animal?       @relation(fields: [id_animal], references: [id_animal])
+  id_animal   Int? // Creamos un índice único para reemplazar la PK
+  granja_raza Granja_Raza[]
+}
+
 model Animal {
-  id_animal     Int      @id @default(autoincrement())
-  nombre_animal String
-  Raza             Razas[]
+  id_animal     Int     @id @default(autoincrement())
+  nombre_animal String  @unique
+  Raza          Razas[]
 }

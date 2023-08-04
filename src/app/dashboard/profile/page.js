@@ -32,6 +32,7 @@ function ProfilePage() {
         <>
          <Link href="negocio">Crear negocio</Link>
          <Link href="animal">Crear Animal</Link>
+         <Link href="granja">Crear Granja</Link>
         </>
         
       )}
