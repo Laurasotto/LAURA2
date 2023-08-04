@@ -34,10 +34,8 @@ function ProfilePage() {
          <Link href="animal">Crear Animal</Link>
          <Link href="granja">Crear Granja</Link>
         </>
-        
       )}
     </div>
   );
 }
-
 export default ProfilePage;
