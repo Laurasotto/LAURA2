@@ -5,6 +5,45 @@ import { useSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 
+// model Animal {
+//     id_animal     Int     @id @default(autoincrement())
+//     nombre_animal String  @unique
+//     Raza          Razas[]
+//   }
+
+
+
+//funcion para obtener los animales
+
+export async function GET() {
+    const animal = await prisma.animal.findMany({
+        select: {
+            id_animal: true,
+            nombre_animal: true,
+        }
+    });
+    return new NextResponse(
+        JSON.stringify(animal),
+        {
+            status: 200,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+    )
+}
+
+
+
+
+
+
+
+
+
+
+
+
 export async function POST(request) {
     
     const { nombre_animal} = await request.json();
@@ -34,24 +73,6 @@ export async function POST(request) {
             nombre_animal: animal.nombre_animal,
            
         }),
-        {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-    )
-}
-export async function GET() {
-    const animal = await prisma.animal.findMany({
-        select: {
-            id_animal: true,
-            nombre_animal: true,
-          
-        }
-    });
-    return new NextResponse(
-        JSON.stringify(animal),
         {
             status: 200,
             headers: {

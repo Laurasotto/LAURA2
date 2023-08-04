@@ -2,60 +2,67 @@
 
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { NextRequest } from "next/server";
+
 
 const prisma = new PrismaClient();
-//obtener todas las razas 
 
-export async function GET() {
-    const razas = await prisma.razas.findMany({
-        include: {
-            Animal: true,
-        },
+
+export async function POST(req) {
+  const { nombre_granja, direccion, razas } = req.body;
+
+  // Crear la granja con sus datos básicos
+  const granja = await prisma.granja.create({
+    data: {
+      nombre_granja,
+      direccion,
+    },
+  });
+
+  // Asociar las razas a la granja en la tabla intermedia Granja_Raza
+  for (const id_raza of razas) {
+    await prisma.granja_Raza.create({
+      data: {
+        id_granja: granja.id_granja,
+        id_raza,
+      },
     });
-    return new NextResponse(
-        JSON.stringify(razas),
-        {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
+  }
+
+  return new NextResponse(
+    JSON.stringify(granja),
+    {
+      status: 201,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 }
 
 // model Granja {
 //     id_granja            Int                   @id @default(autoincrement())
-//     nombre_granja        String                 
-//     direccion            String                 @unique
+//     nombre_granja        String
+//     direccion            String                @unique
 //     fecha_creacion       DateTime              @default(now())
-//     razas             Razas? @relation(fields: [id_raza], references: [id_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
-//     id_raza            Int // Creamos un índice único para reemplazar la PK
+//     razas                Granja_Raza           @relation(fields: [id_granja_raza], references: [id_granja_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
+//     id_granja_raza       Int
 //     granjas_distribuidor Granja_Distribuidor[]
-//     granja_raza          Granja_Raza[]
 //   }
-
-
-//que el post sea para crear una granja con 
-
-export async function POST(request) {
-    const { nombre_granja, direccion, id_raza } = await request.body.json();
-    const granja = await prisma.granjas.create({
-        data: {
-            nombre_granja,
-            direccion,
-            id_raza: id_raza,
+// Obtener todas las granjas
+export async function GET(){
+    const granjas = await prisma.granja.findMany({
+        include: {
+        razas: true,
         },
     });
+    
     return new NextResponse(
-        JSON.stringify(granja),
+        JSON.stringify(granjas),
         {
-            status: 201,
-            headers: {
-                "Content-Type": "application/json",
-            },
+        status: 200,
+        headers: {
+            "Content-Type": "application/json",
+        },
         }
     );
 }
-
-
