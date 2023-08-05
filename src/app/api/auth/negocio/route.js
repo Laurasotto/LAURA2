@@ -1,11 +1,9 @@
 // pages/api/negocio.js
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { useSession } from "next-auth/react";
-
-const prisma = new PrismaClient();
 
 export async function POST(request) {
+  const prisma = new PrismaClient();
   const { nombre_negocio, direccion_negocio, userId } = await request.json();
   console.log(nombre_negocio, direccion_negocio, userId);
 
@@ -53,6 +51,7 @@ export async function POST(request) {
 }
 
 export async function GET() {
+  const prisma = new PrismaClient();
   try {
     const negocios = await prisma.negocio.findMany();
 

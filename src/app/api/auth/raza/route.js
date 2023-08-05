@@ -1,18 +1,16 @@
 // pages/api/negocio.js
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { useSession } from "next-auth/react";
-
-const prisma = new PrismaClient();
 
 export async function POST(request) {
+  const prisma = new PrismaClient();
   const { nombre_raza, id_animal } = await request.json();
   console.log(nombre_raza, id_animal);
 
   //validaciones de nombre, direccion y userId
 
   try {
-    if (!nombre_raza || nombre_raza.trim().length === 0) {
+    if (!nombre_raza || nombre_raza.length === 0) {
       return NextResponse.json(
         {
           message: "Nombre cannot be empty",
@@ -39,7 +37,7 @@ export async function POST(request) {
     const raza = await prisma.razas.create({
       data: {
         nombre_raza,
-        id_animal,
+        id_animal: parseInt(id_animal),
       },
     });
 
@@ -54,16 +52,20 @@ export async function POST(request) {
 }
 
 export async function GET() {
+  const prisma = new PrismaClient();
   try {
     const razas = await prisma.razas.findMany({
-      select: {
-        id_raza: true,
-        nombre_raza: true,
-        id_animal: true,
+      include: {
+        Animal: {
+          select: {
+            nombre_animal: true,
+          },
+        },
       },
     });
     return NextResponse.json(razas);
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }

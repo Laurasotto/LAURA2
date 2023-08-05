@@ -2,9 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
-
 export async function POST(request) {
+  const prisma = new PrismaClient();
   const { nombre, apellido, telefono, documento, email, password, roleId } =
     await request.json();
   //crear roles para hacer un select en el formulario del rol

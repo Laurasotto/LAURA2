@@ -1,11 +1,10 @@
 // api/granja.js
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 //obtener todas las razas
 
 export async function GET() {
+  const prisma = new PrismaClient();
   try {
     const razas = await prisma.razas.findMany({
       include: {
@@ -31,6 +30,7 @@ export async function GET() {
 //que el post sea para crear una granja con
 
 export async function POST(request) {
+  const prisma = new PrismaClient();
   const { nombre_granja, direccion, id_raza } = await request.json();
   try {
     const granja = await prisma.granjas.create({
