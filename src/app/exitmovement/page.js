@@ -96,7 +96,7 @@ export default function ExitMovement() {
           </thead>
           {/* Table body */}
           <tbody>
-            {fetchExitMovement.map((exit) => (
+            {fetchExitMovement?.map((exit) => (
               <tr key={exit.id}>
                 <td className="py-2 px-4 border">{exit.id}</td>
                 <td className="py-2 px-4 border">{exit.peso}</td>
