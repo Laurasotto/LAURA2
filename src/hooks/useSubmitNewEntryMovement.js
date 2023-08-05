@@ -5,9 +5,22 @@ export default function useSubmitNewEntryMovement() {
   const [entryMovement, setEntryMovement] = useState({
     peso: 0,
     precio: 0,
-    id_gd: 0,
-    id_corte: 0,
+    corteId: 0,
+    distribuidorId: 0,
+    granjaId: 0,
   });
+
+  const getDistribuidor = async () => {
+    return await axios.get("/api/auth/distributor");
+  };
+
+  const getCorte = async () => {
+    return await axios.get("/api/cortes");
+  };
+
+  const getGranja = async () => {
+    return await axios.get("/api/granjaRaza");
+  };
 
   const handleChange = (e) => {
     setEntryMovement({
@@ -25,8 +38,9 @@ export default function useSubmitNewEntryMovement() {
       setEntryMovement({
         peso: 0,
         precio: 0,
-        id_gd: 0,
-        id_corte: 0,
+        corteId: 0,
+        distribuidorId: 0,
+        granjaId: 0,
       });
 
       return console.log(response);
@@ -39,5 +53,8 @@ export default function useSubmitNewEntryMovement() {
     entryMovement,
     handleChange,
     handleSubmit,
+    getDistribuidor,
+    getCorte,
+    getGranja,
   };
 }

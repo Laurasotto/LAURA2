@@ -7,11 +7,7 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 export async function GET() {
   try {
-    const distribuidores = await prisma.distribuidor.findMany({
-      include: {
-        distri_negocio: true,
-      },
-    });
+    const distribuidores = await prisma.distribuidor.findMany();
 
     return NextResponse.json(distribuidores);
   } catch (error) {

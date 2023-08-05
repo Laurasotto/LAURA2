@@ -50,8 +50,8 @@ model Distribuidor {
   documento_distribuidor Int
   fecha_creacion         DateTime               @default(now())
   negocios               Negocio[]              @relation("DistribuidoresNegocios")
-  granjas_distribuidor   Granja_Distribuidor[]
   negocio_distribuidor   Negocio_Distribuidor[]
+  Movimiento_Entrada     Movimiento_Entrada[]
 }
 
 //modelo Negocio_Distribuidor
@@ -63,30 +63,20 @@ model Negocio_Distribuidor {
   id_negocio      Int // Creamos un índice único para reemplazar la PK
 }
 
-// Modelo de "Granja_Distribuidor"
-model Granja_Distribuidor {
-  id_gd              Int                  @id @default(autoincrement())
-  distribuidor       Distribuidor         @relation(fields: [id_distribuidor], references: [id_distribuidor])
-  Movimiento_Entrada Movimiento_Entrada[]
-  id_distribuidor    Int
-  GranjaRazas        GranjaRazas?         @relation(fields: [granjaRazasId], references: [id])
-  granjaRazasId      Int?
-  Granja             Granja?              @relation(fields: [granjaId_granja], references: [id_granja])
-  granjaId_granja    Int?
-}
-
 // Modelo de "Movimiento_Entrada"
 
 model Movimiento_Entrada {
-  id                 Int                 @id @default(autoincrement())
-  fecha              DateTime            @default(now())
-  peso               Int
-  precio             Int
-  distribuidorGranja Granja_Distribuidor @relation(fields: [id_gd], references: [id_gd])
-  id_gd              Int
-  movimientoSalida   Movimiento_salida[]
-  corte              Corte?              @relation(fields: [corteId], references: [id_corte])
-  corteId            Int?
+  id               Int                 @id @default(autoincrement())
+  fecha            DateTime            @default(now())
+  peso             Int
+  precio           Int
+  movimientoSalida Movimiento_salida[]
+  corte            Corte?              @relation(fields: [corteId], references: [id_corte])
+  corteId          Int?
+  granja           GranjaRazas         @relation(fields: [granjaId], references: [id])
+  granjaId         Int
+  distribuidor     Distribuidor        @relation(fields: [distribuidorId], references: [id_distribuidor])
+  distribuidorId   Int
 }
 
 // Modelo de "Movimiento_salida"
@@ -109,21 +99,20 @@ model Corte {
 }
 
 model Granja {
-  id_granja           Int                   @id @default(autoincrement())
-  nombre_granja       String
-  direccion           String                @unique
-  fecha_creacion      DateTime              @default(now())
-  GranjaRazas         GranjaRazas[]
-  Granja_Distribuidor Granja_Distribuidor[]
+  id_granja      Int           @id @default(autoincrement())
+  nombre_granja  String
+  direccion      String        @unique
+  fecha_creacion DateTime      @default(now())
+  GranjaRazas    GranjaRazas[]
 }
 
 model GranjaRazas {
-  id                   Int                   @id @default(autoincrement())
-  id_granja            Int
-  id_raza              Int
-  Granja               Granja                @relation(fields: [id_granja], references: [id_granja])
-  Razas                Razas                 @relation(fields: [id_raza], references: [id_raza])
-  granjas_distribuidor Granja_Distribuidor[]
+  id                 Int                  @id @default(autoincrement())
+  id_granja          Int
+  id_raza            Int
+  Granja             Granja               @relation(fields: [id_granja], references: [id_granja])
+  Razas              Razas                @relation(fields: [id_raza], references: [id_raza])
+  Movimiento_Entrada Movimiento_Entrada[]
 }
 
 model Razas {

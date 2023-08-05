@@ -1,9 +1,44 @@
 "use client";
+import { useEffect, useState } from "react";
 import useSubmitNewEntryMovement from "@/hooks/useSubmitNewEntryMovement";
 
 export default function MovementPage() {
-  const { entryMovement, handleChange, handleSubmit } =
-    useSubmitNewEntryMovement();
+  const {
+    entryMovement,
+    handleChange,
+    handleSubmit,
+    getDistribuidor,
+    getCorte,
+    getGranja,
+  } = useSubmitNewEntryMovement();
+  const [distribuidor, setDistribuidor] = useState([]);
+  const [corte, setCorte] = useState([]);
+  const [granja, setGranja] = useState([]);
+
+  useEffect(() => {
+    const fetchDistribuidor = async () => {
+      const res = await getDistribuidor();
+      setDistribuidor(res.data);
+    };
+
+    const fetchCorte = async () => {
+      const res = await getCorte();
+      setCorte(res.data);
+    };
+
+    const fetchGranja = async () => {
+      const res = await getGranja();
+      setGranja(res.data);
+    };
+
+    fetchDistribuidor();
+    fetchCorte();
+    fetchGranja();
+  }, []);
+
+  useEffect(() => {
+    console.log(granja);
+  }, []);
 
   return (
     <div
@@ -24,6 +59,7 @@ export default function MovementPage() {
         }}
         onSubmit={handleSubmit}
       >
+        <label style={{ color: "white" }}>Peso</label>
         <input
           type="number"
           name="peso"
@@ -32,6 +68,7 @@ export default function MovementPage() {
           value={entryMovement.peso}
           required
         />
+        <label style={{ color: "white" }}>Precio</label>
         <input
           type="number"
           name="precio"
@@ -41,26 +78,47 @@ export default function MovementPage() {
           required
         />
         <select
-          name="id_gd"
-          placeholder="id_gd"
+          name="distribuidorId"
+          placeholder="distribuidorId"
           onChange={handleChange}
-          value={entryMovement.id_gd}
+          value={entryMovement.distribuidorId}
           required
         >
-          <option value="">id_gd</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
+          <option value="">Distribuidor</option>
+          {distribuidor?.map((d) => (
+            <option key={d.id_distribuidor} value={d.id_distribuidor}>
+              {d.nombre_distribuidor}
+            </option>
+          ))}
         </select>
         <select
-          name="id_corte"
-          placeholder="id_corte"
+          name="corteId"
+          placeholder="corteId"
           onChange={handleChange}
-          value={entryMovement.id_corte}
+          value={entryMovement.corteId}
           required
         >
-          <option value="">id_corte</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
+          <option value="">Cortes</option>
+          {corte?.map((c) => (
+            <option key={c.id_corte} value={c.id_corte}>
+              {c.nombre_corte}
+            </option>
+          ))}
+        </select>
+        <select
+          name="granjaId"
+          placeholder="granjaId"
+          onChange={handleChange}
+          value={entryMovement.granjaId}
+          style={{ color: "black" }}
+          required
+        >
+          <option value="">Granja</option>
+          {granja?.map((g) => (
+            <option style={{ color: "black" }} key={g.id} value={g.id}>
+              {g.Granja.nombre_granja}
+            </option>
+          ))}
         </select>
         <button style={{ color: "#fff", border: "1px solid white" }}>
           Enviar

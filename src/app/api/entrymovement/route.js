@@ -10,8 +10,21 @@ export async function POST(req) {
       data: {
         peso: parseInt(data.peso),
         precio: parseInt(data.precio),
-        id_gd: parseInt(data.id_gd),
-        id_corte: parseInt(data.id_corte),
+        corte: {
+          connect: {
+            id_corte: parseInt(data.corteId),
+          },
+        },
+        distribuidor: {
+          connect: {
+            id_distribuidor: parseInt(data.distribuidorId),
+          },
+        },
+        granja: {
+          connect: {
+            id: parseInt(data.granjaId),
+          },
+        },
       },
     });
 

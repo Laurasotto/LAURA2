@@ -6,13 +6,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export async function GET() {
   try {
-    const razas = await prisma.razas.findMany({
-      include: {
-        Animal: true,
-      },
-    });
-    return NextResponse.json(razas);
+    const granjas = await prisma.granja.findMany();
+    return NextResponse.json(granjas);
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }
