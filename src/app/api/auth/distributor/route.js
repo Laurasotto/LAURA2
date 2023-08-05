@@ -4,8 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 //metodo get para obtener todos los distribuidores
+const prisma = new PrismaClient();
 export async function GET() {
-  const prisma = new PrismaClient();
   try {
     const distribuidores = await prisma.distribuidor.findMany({
       include: {
@@ -20,7 +20,6 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const {
     nombre_distribuidor,
     apellido_distribuidor,

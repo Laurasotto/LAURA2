@@ -2,8 +2,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
+const prisma = new PrismaClient();
+
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const { nombre_raza, id_animal } = await request.json();
   console.log(nombre_raza, id_animal);
 
@@ -52,7 +53,6 @@ export async function POST(request) {
 }
 
 export async function GET() {
-  const prisma = new PrismaClient();
   try {
     const razas = await prisma.razas.findMany({
       include: {

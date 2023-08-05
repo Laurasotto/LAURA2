@@ -67,10 +67,12 @@ model Negocio_Distribuidor {
 model Granja_Distribuidor {
   id_gd              Int                  @id @default(autoincrement())
   distribuidor       Distribuidor         @relation(fields: [id_distribuidor], references: [id_distribuidor])
-  granja             Granja               @relation(fields: [id_granja], references: [id_granja])
   Movimiento_Entrada Movimiento_Entrada[]
   id_distribuidor    Int
-  id_granja          Int // Creamos un índice único para reemplazar la PK
+  GranjaRazas        GranjaRazas?         @relation(fields: [granjaRazasId], references: [id])
+  granjaRazasId      Int?
+  Granja             Granja?              @relation(fields: [granjaId_granja], references: [id_granja])
+  granjaId_granja    Int?
 }
 
 // Modelo de "Movimiento_Entrada"
@@ -107,21 +109,29 @@ model Corte {
 }
 
 model Granja {
-  id_granja            Int                   @id @default(autoincrement())
-  nombre_granja        String
-  direccion            String                @unique
-  razas                Razas                 @relation(fields: [id_raza], references: [id_raza])
+  id_granja           Int                   @id @default(autoincrement())
+  nombre_granja       String
+  direccion           String                @unique
+  fecha_creacion      DateTime              @default(now())
+  GranjaRazas         GranjaRazas[]
+  Granja_Distribuidor Granja_Distribuidor[]
+}
+
+model GranjaRazas {
+  id                   Int                   @id @default(autoincrement())
+  id_granja            Int
   id_raza              Int
-  fecha_creacion       DateTime              @default(now())
+  Granja               Granja                @relation(fields: [id_granja], references: [id_granja])
+  Razas                Razas                 @relation(fields: [id_raza], references: [id_raza])
   granjas_distribuidor Granja_Distribuidor[]
 }
 
 model Razas {
-  id_raza     Int      @id @default(autoincrement())
-  nombre_raza String   @unique
-  Animal      Animal   @relation(fields: [id_animal], references: [id_animal])
+  id_raza     Int           @id @default(autoincrement())
+  nombre_raza String        @unique
+  Animal      Animal        @relation(fields: [id_animal], references: [id_animal])
   id_animal   Int
-  Granja      Granja[]
+  GranjaRazas GranjaRazas[]
 }
 
 model Animal {

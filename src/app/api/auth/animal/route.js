@@ -2,8 +2,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
+const prisma = new PrismaClient();
+
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const { nombre_animal } = await request.json();
   console.log(nombre_animal);
 
@@ -29,7 +30,6 @@ export async function POST(request) {
 }
 
 export async function GET() {
-  const prisma = new PrismaClient();
   try {
     const animal = await prisma.animal.findMany({
       select: {

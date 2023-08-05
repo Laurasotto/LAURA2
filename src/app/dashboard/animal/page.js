@@ -11,24 +11,28 @@ const CrearAnimalFormulario = () => {
   const [razas, setRazas] = useState([]);
 
   const getAnimales = async () => {
-    const response = await axios.get("/api/auth/animal");
-    setAnimales(response.data);
+    try {
+      const response = await axios.get("/api/auth/animal");
+      setAnimales(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getRazas = async () => {
-    const response = await axios.get("/api/auth/raza");
-    setRazas(response.data);
+    try {
+      const response = await axios.get("/api/auth/raza");
+      setRazas(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     // Llamada a la API para obtener las animales y las razas
     getAnimales();
     getRazas();
-  }, [animales, razas]);
-
-  useEffect(() => {
-    console.log(razas);
-  }, [razas]);
+  }, []);
 
   const handleAnimalSubmit = async (e) => {
     e.preventDefault();
@@ -41,8 +45,8 @@ const CrearAnimalFormulario = () => {
       const res = await axios.post("/api/auth/animal", {
         nombre_animal: nombreAnimal,
       });
+      getAnimales();
       setNombreAnimal("");
-      console.log(res);
       return setMensaje("Animal registrado exitosamente: " + res.data);
     } catch (error) {
       setMensaje("");
@@ -64,7 +68,9 @@ const CrearAnimalFormulario = () => {
         id_animal: nombreAnimal,
       });
 
-      setRazas("");
+      getRazas();
+      setNombreRaza("");
+      setNombreAnimal("");
 
       return setMensaje(
         "Raza registrada exitosamente: " + response.data.nombre_raza

@@ -36,10 +36,14 @@ export default function GranjaForm() {
     const granja = {
       nombre_granja,
       direccion,
-      id_razas: selectedRazas,
+      id_raza: selectedRazas,
     };
     try {
       const res = await axios.post("/api/auth/granja", granja);
+
+      setNombre_granja("");
+      setDireccion("");
+      setSelectedRazas([]);
 
       router.push("/dashboard/granja");
       console.log(res);

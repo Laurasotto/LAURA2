@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 //obtener todas las razas
 
+const prisma = new PrismaClient();
 export async function GET() {
-  const prisma = new PrismaClient();
   try {
     const razas = await prisma.razas.findMany({
       include: {
@@ -30,16 +30,25 @@ export async function GET() {
 //que el post sea para crear una granja con
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const { nombre_granja, direccion, id_raza } = await request.json();
+
   try {
     const granja = await prisma.granja.create({
       data: {
         nombre_granja,
         direccion,
-        id_raza: id_raza,
       },
     });
+
+    id_raza.forEach(async (id) => {
+      await prisma.granjaRazas.create({
+        data: {
+          id_granja: granja.id_granja,
+          id_raza: id,
+        },
+      });
+    });
+
     return NextResponse.json(granja);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 400 });
