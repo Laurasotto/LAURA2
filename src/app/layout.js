@@ -15,6 +15,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+      <div className="header-image">
+        <h1 className="h1-white">Inventario de productos carnicos</h1>
+    </div>
         <Providers>
           <Navbar />
           {children}</Providers> {/* Utiliza el componente Providers aquí */}

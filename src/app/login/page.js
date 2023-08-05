@@ -2,6 +2,7 @@
 import { signIn } from 'next-auth/react';
 import { useRouter } from "next/navigation"; // Corrige la importación aquí
 import { useState } from "react";
+import './login.css'
 
 function LoginPage() {
   const [error, setError] = useState();
@@ -31,28 +32,31 @@ function LoginPage() {
 
     return (
 
-    <div className='justify-center h-[calc(100vh-4rem)] flex items-center'>
-      <form onSubmit={handleSubmit} className='bg-neutral-950 px-8 py-10 w-3/12'>
+      <div className='div-block-14'>
+      <form onSubmit={handleSubmit} className='form'>
         {
           error && <div className="bd-red-500 text-white p-2 mb-2">{error}</div>
         }
-        <h1 className='bg-white text-4xl font-bold mb-7'>Signin</h1>
+        <h1 className='h1'>Iniciar Sesión</h1>
         
+        <div className='form-block w-form'>
+          <div className='contendor-form'>
+          <input type="email"
+            placeholder="email@email.com"
+            name="email"
+            className="input w-input"
+          />
 
-        <input type="email"
-          placeholder="email@email.com"
-          name="email"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
-        />
 
-
-        <input type="password"
-          placeholder="******"
-          name="password"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
-        />
-
-        <button className="bg-indigo-500 px-4 py-2">Login</button>
+          <input type="password"
+            placeholder="******"
+            name="password"
+            className="input w-input"
+          />
+        </div>
+        </div>
+        <div> 
+    <button className="button-login">Ingresar</button></div>
 
       </form>
     </div>

@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { signIn } from 'next-auth/react';
 import { useRouter } from "next/navigation"; // Corrige la importación aquí
 import { useState } from "react";
+import './register.css'
 
 function RegisterPage() {
   const [error, setError] = useState();
@@ -47,55 +48,60 @@ function RegisterPage() {
   };
 
   return (
-    <div className='justify-center h-[calc(100vh-4rem)] flex items-center'>
-      <form onSubmit={handleSubmit} className='bg-neutral-950 px-8 py-10 w-3/12'>
+    <div className='div-block-14'>
+      <form onSubmit={handleSubmit} className='form'>
         {
           error && <div className="bd-red-500 text-white p-2 mb-2">{error}</div>
         }
-        <h1 className='bg-white text-4xl font-bold mb-7'>SignUp</h1>
-        <input type="text"
+         <h1 className='h1'>Registro</h1>
+        <div className='form-block w-form'>
+          <div className='contendor-form'>
+          <input type="text"
           placeholder="Nombre"
           name="nombre"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+          className="input w-input"
         />
 
         <input type="text"
           placeholder="Apellido"
           name="apellido"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+          className="input w-input"
         />
 
         <input type="text"
           placeholder="Telefono"
           name="telefono"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+          className="input w-input"
         />
 
         <input type="text"
           placeholder="Documento"
           name="documento"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+          className="input w-input"
         />
 
         <input type="email"
           placeholder="email@email.com"
           name="email"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+          className="input w-input"
         />
 
         <input type="password"
           placeholder="******"
           name="password"
-          className="bg-zinc-800  px-4 py-2 block mb-2 w-full"
+          className="input w-input"
         />
 
-        <select name="roleId" className="bg-zinc-800 px-4 py-2 block mb-2 w-full">
+        </div>
+       </div>
+
+        <select name="roleId" className="select">
           <option value="1">Admin</option>
           <option value="2">Empleado</option>
         </select>
-        
-
-        <button className="bg-indigo-500 px-4 py-2">Register</button>
+        <div className="divbotones">
+        <button className="button-register">Registrarse</button>
+        </div>
 
       </form>
     </div>

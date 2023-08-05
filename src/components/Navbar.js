@@ -1,35 +1,38 @@
 'use client'
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+import './navbar.css'
 
 function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="bg-zinc-900 p-4">
-      <div className="container mx-auto flex justify-between">
-        <Link href="/">
-          <h1 className="font-bold text-xl">NextAuth</h1>
-        </Link>
-
-        <ul className="flex gap-x-2">
+     <nav className="nav-barra">
+    <div className="div-block-16">
+    <ul className="ulnav">
           {session ? (
             <>
-              <li className="px-3 py-1">
+              <li className="link-navbar">
                 <Link href="/dashboard/profile">Perfil</Link>
               </li>
+              <button
+          className="cerrar-sesion"
+          onClick={() => {
+            signOut();
+          }}
+        >
+          Log out
+        </button>
             </>
           ) : (
             <>
-              <li className="px-3 py-1">
-                <Link href="/about">About</Link>
+              <li className="login">
+                <Link href="/login">Ingresar</Link>
               </li>
-              <li className="bg-indigo-500 px-3 py-1">
-                <Link href="/login">Login</Link>
-              </li>
-              <li className="bg-indigo-700 px-3 py-1">
-                <Link href="/register">Register</Link>
-              </li>
+              <li className="registrarse">
+                <Link href="/register">Registrarse</Link>
+              </li>  
             </>
           )}
         </ul>

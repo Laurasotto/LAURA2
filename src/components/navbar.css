@@ -1,0 +1,61 @@
+.nav-barra {
+    background-color: #191a1e;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+.div-block-16 {
+    width: 1200px;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 20px 40px;
+   
+}
+.w-inline-block {
+    max-width: 100%;
+    display: inline-block;
+}.link-navbar {
+    text-decoration: none;
+}
+.ulnav {
+    justify-content: right;
+    display: flex;
+    column-gap: 20px;
+}
+.text-block-4 {
+    color: #fff;
+    text-transform: uppercase;
+    background-color: rgba(0, 0, 0, 0);
+    font-family: Open Sans, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+.login{
+    background-color: #3F51B5;
+    padding: 5px 10px 5px 10px ;
+    border-radius: 5px;
+    color: white;
+    font-weight: 600;  
+}
+.registrarse{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
+}.registrarse:hover{
+    text-decoration: underline;
+}
+.link-navbar{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 20px;
+}
+.cerrar-sesion{
+    background-color: #f44336;
+    padding: 5px 15px 5px 15px ;
+    border-radius: 5px;
+    color: white;
+    font-weight: 600;  
+    font-size: 20px;
+}

@@ -1,42 +1,78 @@
 'use client'
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import './profile.css'
 
 function ProfilePage() {
-  const { data: session, status } = useSession(); // Añade los paréntesis para invocar la función
-
-  console.log(session, status); // Usa 'session' en lugar de 'data'
+  const { data: session, status } = useSession();
 
   return (
-    <div className="justify-center h-[calc(100vh-4rem)] flex flex-col items-center gap-y-5">
-      <h1 className="font-bold text-3xl">Profile</h1>
-      <pre className="bg-zinc-800 p-4">
-        {
-          JSON.stringify({
-            session,
-            status,
-          },
-            null,
-            2
-          )}
-      </pre>
-      <p>ID de usuario: {session?.user?.id}</p>
-      <p>ID de rol: {session?.user?.roleId}</p>
-      <button className="bg-zinc-800 px-4 py-2 block mb-2"
-        onClick={() => {
-          signOut();
-        }}>Log out</button>
+    <div className="contenedor">
+      {/* Perfil */}
+      <div className="perfil">
+          <div className="flex">
+           <img className="imageprofile" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" alt=""  />
+              <div className="user">
+              <h1 className="texto">{session?.user?.nombre} {session?.user?.apellido}</h1>
+              <p className="texto">{session?.user?.email}</p>
+            </div>
+          </div>
+          
+          <div className="flex-div">
+            <p className="subtitulo">ID de usuario:</p>
+            <p className="texto">{session?.user?.id}</p>
+          </div>
+          <div className="flex-div">
+            <p className="subtitulo">Teléfono:</p>
+            <p className="texto">{session?.user?.telefono}</p>
+          </div>
+          <div className="flex-div">
+            <p className="subtitulo">Documento:</p>
+            <p className="texto">{session?.user?.documento}</p>
+          </div>
+      </div>
 
-      
-      {session?.user?.roleId === 1 && (
-        <>
-         <Link href="negocio">Crear negocio</Link>
-         <Link href="animal">Crear Animal</Link>
-         <Link href="granja">Crear Granja</Link>
-         <Link href="distributor">Crear Distribuidor</Link>
-        </>
-      )}
-    </div>
-  );
-}
+      {/* Botones */}
+      <div className="interacciones">
+        <div className="p-4">
+          {session?.user?.roleId === 1 ? (
+            <div className="elementos-int">
+              <div >
+                <Link className="texto-acciones" href="negocio">Crear negocio</Link>
+              </div>
+              <div className="">
+                <Link className="texto-acciones" href="animal">Crear Animal</Link>
+              </div>
+              <div className="">
+                <Link className="texto-acciones" href="granja">Crear Granja</Link>
+              </div>
+              <div className="">
+                <Link className="texto-acciones" href="distributor">Crear Distribuidor</Link>
+              </div>
+              <div>
+                <Link className="texto-acciones" href="../entrymovement">Crear Movimiento entrada</Link>
+              </div>
+              <div >
+                <Link className="texto-acciones" href="../exitmovement">Crear Movimiento salida</Link>
+              </div>
+            </div>
+            
+          ): (
+            <div >
+              <div className="p-4">
+                <div>
+                  <Link className="texto-acciones" href="../entrymovement">Crear Movimiento entrada</Link>
+                </div>
+                <div >
+                  <Link className="texto-acciones" href="../exitmovement">Crear Movimiento salida</Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        </div>
+        </div>
+      );
+    }
+
 export default ProfilePage;
