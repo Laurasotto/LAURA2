@@ -24,7 +24,7 @@ const CrearAnimalFormulario = () => {
     // Llamada a la API para obtener las animales y las razas
     getAnimales();
     getRazas();
-  }, []);
+  }, [animales, razas]);
 
   useEffect(() => {
     console.log(razas);
@@ -60,13 +60,15 @@ const CrearAnimalFormulario = () => {
 
     try {
       const response = await axios.post("/api/auth/raza", {
-        nombre_raza: [nombreRaza],
+        nombre_raza: nombreRaza,
         id_animal: nombreAnimal,
       });
 
       setRazas("");
 
-      return setMensaje("Raza registrada exitosamente: " + response.data);
+      return setMensaje(
+        "Raza registrada exitosamente: " + response.data.nombre_raza
+      );
     } catch (error) {
       console.log(error);
       setMensaje("");
@@ -81,7 +83,6 @@ const CrearAnimalFormulario = () => {
           <label>Nombre del animal:</label>
           <input
             type="text"
-            value={nombreAnimal}
             onChange={(e) => setNombreAnimal(e.target.value)}
             style={{
               color: "black",
@@ -157,13 +158,14 @@ const CrearAnimalFormulario = () => {
             </tr>
           </thead>
           <tbody>
-            {razas?.map((raza) => (
-              <tr key={raza.id_raza}>
-                <td>{raza.id_raza}</td>
-                <td>{raza.nombre_raza.map((nombre) => nombre)}</td>
-                <td>{raza.Animal.nombre_animal}</td>
-              </tr>
-            ))}
+            {razas &&
+              razas?.map((raza) => (
+                <tr key={raza.id_raza}>
+                  <td>{raza.id_raza}</td>
+                  <td>{raza.nombre_raza}</td>
+                  <td>{raza.Animal.nombre_animal}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

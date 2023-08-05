@@ -33,7 +33,7 @@ export async function POST(request) {
   const prisma = new PrismaClient();
   const { nombre_granja, direccion, id_raza } = await request.json();
   try {
-    const granja = await prisma.granjas.create({
+    const granja = await prisma.granja.create({
       data: {
         nombre_granja,
         direccion,

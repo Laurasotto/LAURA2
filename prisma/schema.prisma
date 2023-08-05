@@ -32,35 +32,35 @@ model Role {
 }
 
 model Negocio {
-  id_negocio        Int            @id @default(autoincrement())
-  nombre_negocio    String
-  direccion_negocio String
-  fecha_creacion    DateTime       @default(now())
-  userId            Int
-  usuario           User           @relation(fields: [userId], references: [id])
-  distribuidores    Distribuidor[] @relation("DistribuidoresNegocios")
+  id_negocio           Int                    @id @default(autoincrement())
+  nombre_negocio       String
+  direccion_negocio    String
+  fecha_creacion       DateTime               @default(now())
+  userId               Int
+  usuario              User                   @relation(fields: [userId], references: [id])
+  distribuidores       Distribuidor[]         @relation("DistribuidoresNegocios")
   negocio_distribuidor Negocio_Distribuidor[]
 }
 
 model Distribuidor {
-  id_distribuidor        Int                   @id @default(autoincrement())
+  id_distribuidor        Int                    @id @default(autoincrement())
   nombre_distribuidor    String
   apellido_distribuidor  String
   telefono_distribuidor  String
   documento_distribuidor Int
-  fecha_creacion         DateTime              @default(now())
-  negocios               Negocio[]             @relation("DistribuidoresNegocios")
+  fecha_creacion         DateTime               @default(now())
+  negocios               Negocio[]              @relation("DistribuidoresNegocios")
   granjas_distribuidor   Granja_Distribuidor[]
   negocio_distribuidor   Negocio_Distribuidor[]
 }
 
 //modelo Negocio_Distribuidor
-model Negocio_Distribuidor{
-  id_nd              Int                  @id @default(autoincrement())
-  distribuidor       Distribuidor         @relation(fields: [id_distribuidor], references: [id_distribuidor])
-  negocio            Negocio              @relation(fields: [id_negocio], references: [id_negocio])
-  id_distribuidor    Int
-  id_negocio         Int // Creamos un índice único para reemplazar la PK
+model Negocio_Distribuidor {
+  id_nd           Int          @id @default(autoincrement())
+  distribuidor    Distribuidor @relation(fields: [id_distribuidor], references: [id_distribuidor])
+  negocio         Negocio      @relation(fields: [id_negocio], references: [id_negocio])
+  id_distribuidor Int
+  id_negocio      Int // Creamos un índice único para reemplazar la PK
 }
 
 // Modelo de "Granja_Distribuidor"
@@ -110,27 +110,18 @@ model Granja {
   id_granja            Int                   @id @default(autoincrement())
   nombre_granja        String
   direccion            String                @unique
+  razas                Razas                 @relation(fields: [id_raza], references: [id_raza])
+  id_raza              Int
   fecha_creacion       DateTime              @default(now())
-  razas                Granja_Raza           @relation(fields: [id_granja_raza], references: [id_granja_raza], onDelete: Cascade) // Relación muchos a muchos con Categoria_Animal
-  id_granja_raza       Int
   granjas_distribuidor Granja_Distribuidor[]
 }
 
-//tabla intermedia entre granja y raza
-model Granja_Raza {
-  id_granja_raza Int      @id @default(autoincrement())
-  id_granja      Int
-  id_raza        Int // Cambiar el tipo a Int
-  granja         Granja[]
-  raza           Razas    @relation(fields: [id_raza], references: [id_raza])
-}
-
 model Razas {
-  id_raza     Int           @id @default(autoincrement()) // Cambiar el tipo a Int
-  nombre_raza String[]      @unique
-  Animal      Animal?       @relation(fields: [id_animal], references: [id_animal])
-  id_animal   Int? // Creamos un índice único para reemplazar la PK
-  granja_raza Granja_Raza[]
+  id_raza     Int      @id @default(autoincrement())
+  nombre_raza String   @unique
+  Animal      Animal   @relation(fields: [id_animal], references: [id_animal])
+  id_animal   Int
+  Granja      Granja[]
 }
 
 model Animal {
