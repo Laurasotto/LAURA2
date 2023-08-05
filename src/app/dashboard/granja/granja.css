@@ -1,0 +1,12 @@
+.h1-granja {
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 25px;
+  line-height: 35px;
+  color: #191a1e;
+  font-family: Open Sans, sans-serif;
+  display: flex;
+  justify-content: center;
+}

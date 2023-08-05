@@ -1,3 +1,4 @@
+// useSubmitNewEntryMovement.js
 import { useState } from "react";
 import axios from "axios";
 
@@ -34,7 +35,13 @@ export default function useSubmitNewEntryMovement() {
 
     try {
       const response = await axios.post("/api/entrymovement", entryMovement);
+      console.log(response);
 
+      // Refresh the entry movements after submitting a new one
+      const entryMovementsResponse = await axios.get("/api/entrymovement");
+      setEntryMovements(entryMovementsResponse.data);
+
+      // Reset the form fields
       setEntryMovement({
         peso: 0,
         precio: 0,
@@ -42,10 +49,8 @@ export default function useSubmitNewEntryMovement() {
         distribuidorId: 0,
         granjaId: 0,
       });
-
-      return console.log(response);
     } catch (error) {
-      return console.log(error);
+      console.log(error);
     }
   };
 

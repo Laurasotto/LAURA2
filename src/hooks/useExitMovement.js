@@ -15,9 +15,9 @@ export default function useExitMovement() {
     });
   };
 
-  const getEntryMovement = async () => {
+  const getExitMovement = async () => {
     try {
-      const res = await axios.get("/api/entrymovement");
+      const res = await axios.get("/api/exitmovement");
       return res.data;
     } catch (error) {
       return console.log(error);
@@ -45,6 +45,6 @@ export default function useExitMovement() {
     exitMovement,
     handleChange,
     handleSubmit,
-    getEntryMovement,
+    getExitMovement,
   };
 }

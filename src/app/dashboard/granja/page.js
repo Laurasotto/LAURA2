@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import "./granja.css";
 
 // Formulario para crear una granja con varias razas
 
@@ -15,7 +16,7 @@ export default function GranjaForm() {
   const router = useRouter();
 
   const getRazasGranja = async () => {
-    const response = await axios.get("/api/auth/granja");
+    const response = await axios.get("/api/auth/raza");
     setRazas(response.data);
   };
 
@@ -39,7 +40,7 @@ export default function GranjaForm() {
       id_raza: selectedRazas,
     };
     try {
-      const res = await axios.post("/api/auth/granja", granja);
+      const res = await axios.post("/api/auth/raza", granja);
 
       setNombre_granja("");
       setDireccion("");
@@ -55,7 +56,7 @@ export default function GranjaForm() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Crear Granja</h1>
+      <h1 className="h1-granja">Crear Granja</h1>
       <form
         onSubmit={handleSubmit}
         className="max-w-md mx-auto bg-white p-8 border shadow-md rounded-lg"

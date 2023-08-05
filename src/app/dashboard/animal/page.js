@@ -1,7 +1,7 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import './animal.css'
+import "./animal.css";
 
 const CrearAnimalFormulario = () => {
   const [nombreAnimal, setNombreAnimal] = useState("");
@@ -91,12 +91,9 @@ const CrearAnimalFormulario = () => {
         alignItems: "center",
       }}
     >
-      <div className="section1">
+      <div className="section-animal">
         {/* Formulario para crear animales */}
-        <form
-          onSubmit={handleAnimalSubmit}
-          className="form-animal"
-        >
+        <form onSubmit={handleAnimalSubmit} className="form-animal">
           <h2 className="h1-animal">Crear Animal</h2>
           <div>
             <label>Nombre del animal:</label>
@@ -126,10 +123,7 @@ const CrearAnimalFormulario = () => {
         </form>
 
         {/* Formulario para crear razas */}
-        <form
-          onSubmit={handleRazaSubmit}
-         className="form-raza"
-        >
+        <form onSubmit={handleRazaSubmit} className="form-raza">
           <h2 className="h1-animal">Crear Raza</h2>
           <div>
             <label>Nombre de la raza:</label>
@@ -145,7 +139,7 @@ const CrearAnimalFormulario = () => {
             <select
               value={nombreAnimal}
               onChange={(e) => setNombreAnimal(e.target.value)}
-              className="input w-input" 
+              className="input w-input"
             >
               <option value="">Selecciona un animal</option>
               {animales.map((animal) => (
@@ -173,75 +167,74 @@ const CrearAnimalFormulario = () => {
           </button>
         </form>
       </div>
-<div className="flex-animal">
-  {/* Tabla de Animales */}
-  <div style={{ marginBottom: "20px", maxWidth: "400px" }}>
-        <h2>Animales</h2>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            border: "1px solid #ccc",
-          }}
-        >
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-            </tr>
-          </thead>
-          <tbody>
-            {animales?.map((animal) => (
-              <tr key={animal.id_animal}>
-                <td style={{ padding: "8px", border: "1px solid #ccc" }}>
-                  {animal.id_animal}
-                </td>
-                <td style={{ padding: "8px", border: "1px solid #ccc" }}>
-                  {animal.nombre_animal}
-                </td>
+      <div className="flex-animal">
+        {/* Tabla de Animales */}
+        <div style={{ marginBottom: "20px", maxWidth: "400px" }}>
+          <h2>Animales</h2>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              border: "1px solid #ccc",
+            }}
+          >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Tabla de Razas */}
-      <div style={{ maxWidth: "400px" }}>
-        <h2>Razas</h2>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            border: "1px solid #ccc",
-          }}
-        >
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Animal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {razas &&
-              razas?.map((raza) => (
-                <tr key={raza.id_raza}>
+            </thead>
+            <tbody>
+              {animales?.map((animal) => (
+                <tr key={animal.id_animal}>
                   <td style={{ padding: "8px", border: "1px solid #ccc" }}>
-                    {raza.id_raza}
+                    {animal.id_animal}
                   </td>
                   <td style={{ padding: "8px", border: "1px solid #ccc" }}>
-                    {raza.nombre_raza}
-                  </td>
-                  <td style={{ padding: "8px", border: "1px solid #ccc" }}>
-                    {raza.Animal.nombre_animal}
+                    {animal.nombre_animal}
                   </td>
                 </tr>
               ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Tabla de Razas */}
+        <div style={{ maxWidth: "400px" }}>
+          <h2>Razas</h2>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              border: "1px solid #ccc",
+            }}
+          >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Animal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {razas &&
+                razas?.map((raza) => (
+                  <tr key={raza.id_raza}>
+                    <td style={{ padding: "8px", border: "1px solid #ccc" }}>
+                      {raza.id_raza}
+                    </td>
+                    <td style={{ padding: "8px", border: "1px solid #ccc" }}>
+                      {raza.nombre_raza}
+                    </td>
+                    <td style={{ padding: "8px", border: "1px solid #ccc" }}>
+                      {raza.Animal.nombre_animal}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-</div>
-    
     </div>
   );
 };

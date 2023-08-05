@@ -1,3 +1,4 @@
+// api/entrymovement.js
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -40,17 +41,23 @@ export async function POST(req) {
 
 export async function GET() {
   try {
-    const entryMovement = await prisma.movimiento_Entrada.findMany({
+    const entryMovements = await prisma.movimiento_Entrada.findMany({
       include: {
         corte: {
           select: {
             nombre_corte: true,
           },
         },
+        distribuidor: true,
+        granja: {
+          select: {
+            Granja: true,
+          },
+        },
       },
     });
 
-    return NextResponse.json(entryMovement);
+    return NextResponse.json(entryMovements);
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: error.message }, { status: 400 });
