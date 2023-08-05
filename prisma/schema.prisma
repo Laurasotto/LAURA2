@@ -82,7 +82,7 @@ model Movimiento_Entrada {
 // Modelo de "Movimiento_salida"
 model Movimiento_salida {
   id                  Int                 @id @default(autoincrement())
-  fecha               DateTime
+  fecha               DateTime            @default(now())
   peso                Int
   precio              Int
   movimientoEntrada   Movimiento_Entrada? @relation(fields: [movimientoEntradaId], references: [id])

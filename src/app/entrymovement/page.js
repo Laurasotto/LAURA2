@@ -36,10 +36,6 @@ export default function MovementPage() {
     fetchGranja();
   }, []);
 
-  useEffect(() => {
-    console.log(granja);
-  }, []);
-
   return (
     <div
       style={{

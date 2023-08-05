@@ -5,7 +5,7 @@ export default function useExitMovement() {
   const [exitMovement, setExitMovement] = useState({
     peso: 0,
     precio: 0,
-    movimientoEntradaId: 0,
+    entryMovementId: 0,
   });
 
   const handleChange = (e) => {
@@ -13,6 +13,15 @@ export default function useExitMovement() {
       ...exitMovement,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const getEntryMovement = async () => {
+    try {
+      const res = await axios.get("/api/entrymovement");
+      return res.data;
+    } catch (error) {
+      return console.log(error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -23,7 +32,7 @@ export default function useExitMovement() {
       setExitMovement({
         peso: 0,
         precio: 0,
-        movimientoEntradaId: 0,
+        entryMovementId: 0,
       });
 
       return console.log(res);
@@ -36,5 +45,6 @@ export default function useExitMovement() {
     exitMovement,
     handleChange,
     handleSubmit,
+    getEntryMovement,
   };
 }

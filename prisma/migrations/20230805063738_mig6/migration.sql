@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Movimiento_salida" ALTER COLUMN "fecha" SET DEFAULT CURRENT_TIMESTAMP;

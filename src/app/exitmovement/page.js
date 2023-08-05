@@ -1,8 +1,20 @@
 "use client";
 import useExitMovement from "@/hooks/useExitMovement";
+import { useEffect, useState } from "react";
 
 export default function ExitMovement() {
-  const { exitMovement, handleChange, handleSubmit } = useExitMovement();
+  const { exitMovement, handleChange, handleSubmit, getEntryMovement } =
+    useExitMovement();
+  const [entryMovement, setEntryMovement] = useState([]);
+
+  useEffect(() => {
+    const fetchEntryMovement = async () => {
+      const res = await getEntryMovement();
+      setEntryMovement(res);
+    };
+
+    fetchEntryMovement();
+  }, []);
 
   return (
     <div
@@ -23,6 +35,7 @@ export default function ExitMovement() {
         }}
         onSubmit={handleSubmit}
       >
+        <label style={{ color: "white" }}>Peso</label>
         <input
           type="number"
           name="peso"
@@ -31,6 +44,7 @@ export default function ExitMovement() {
           value={exitMovement.peso}
           required
         />
+        <label style={{ color: "white" }}>Precio</label>
         <input
           type="number"
           name="precio"
@@ -40,15 +54,19 @@ export default function ExitMovement() {
           required
         />
         <select
-          name="movimientoEntradaId"
-          placeholder="movimientoEntradaId"
+          name="entryMovementId"
+          placeholder="entryMovementId"
           onChange={handleChange}
-          value={exitMovement.movimientoEntradaId}
+          value={exitMovement.entryMovementId}
           required
         >
-          <option value="">id_gd</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
+          <option value="">Movimiento entrada</option>
+          {entryMovement?.map((entry) => (
+            <option key={entry.id} value={entry.id}>
+              {new Date(entry.fecha).toLocaleString("es-CO")}{" "}
+              {entry.corte.nombre_corte}
+            </option>
+          ))}
         </select>
         <button style={{ color: "#fff", border: "1px solid white" }}>
           Enviar

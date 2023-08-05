@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
+const prisma = new PrismaClient();
+
 export async function POST(req) {
-  const prisma = new PrismaClient();
   const data = await req.json();
 
   try {
@@ -34,5 +35,24 @@ export async function POST(req) {
     return NextResponse.json({
       error: error.message,
     });
+  }
+}
+
+export async function GET() {
+  try {
+    const entryMovement = await prisma.movimiento_Entrada.findMany({
+      include: {
+        corte: {
+          select: {
+            nombre_corte: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(entryMovement);
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }
